@@ -33,7 +33,7 @@ export interface ConjugatorMeta {
   /** Canonical URL */
   canonicalUrl: string;
   /** Open Graph image URL */
-  // ogImage: string;
+  ogImage: string;
   /** Short title for OG */
   titleShort: string;
 }
@@ -85,7 +85,7 @@ export const BASE_META: ConjugatorMeta = {
     'Free Japanese verb conjugator with all conjugation forms. Conjugate any Japanese verb instantly - Godan, Ichidan, irregular verbs. Get te-form, masu-form, potential, passive, causative and more.',
   keywords: BASE_KEYWORDS,
   canonicalUrl: `${BASE_URL}${CONJUGATE_PATH}`,
-  // ogImage: `${BASE_URL}/api/og?title=${encodeURIComponent('Japanese Verb Conjugator')}&description=${encodeURIComponent('Conjugate any Japanese verb instantly')}&type=default`,
+  ogImage: `${BASE_URL}/api/og?title=${encodeURIComponent('Japanese Verb Conjugator')}&description=${encodeURIComponent('Conjugate any Japanese verb instantly')}&type=default`,
 };
 
 // ============================================================================
@@ -149,7 +149,12 @@ export function generateCanonicalUrl(
   options?: GenerateMetaOptions,
 ): string {
   const baseUrl = options?.baseUrl ?? BASE_URL;
-  let url = `${baseUrl}${CONJUGATE_PATH}`;
+  const locale = options?.locale;
+  let path = CONJUGATE_PATH;
+  if (locale) {
+    path = `/${locale}${CONJUGATE_PATH}`;
+  }
+  let url = `${baseUrl}${path}`;
 
   // Add verb parameter if provided
   if (verb) {
@@ -186,7 +191,7 @@ export function generateVerbMeta(
   const canonicalUrl = generateCanonicalUrl(verb.dictionaryForm, options);
 
   // Generate OG image URL
-  // const ogImage = `${baseUrl}/api/og?title=${encodeURIComponent(titleShort)}&description=${encodeURIComponent(`${verbTypeDisplay} - All conjugation forms`)}&type=default`;
+  const ogImage = `${baseUrl}/api/og?title=${encodeURIComponent(titleShort)}&description=${encodeURIComponent(`${verbTypeDisplay} - All conjugation forms`)}&type=default`;
 
   // Generate keywords
   const keywords = generateVerbKeywords(verb);
@@ -197,7 +202,7 @@ export function generateVerbMeta(
     description,
     keywords,
     canonicalUrl,
-    // ogImage,
+    ogImage,
   };
 }
 
